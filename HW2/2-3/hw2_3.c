@@ -41,26 +41,11 @@ int main(int argc, char *argv[])
 // time display
 	char timestr[50]="";
 	struct tm *time;
-	time = localtime(filest.st_mtime);
+	time = localtime(&filest.st_mtime);
 	sprintf(timestr, "%d/%d/%d %d:%d:%d\n", 1900+time->tm_year, time->tm_mon+1, time->tm_mday, time->tm_hour, time->tm_min, time->tm_sec);
 
 // print the copied file
-	strcat(buf, "attributes of file");
-	strcat(buf, "\"");
-	strcat(buf, srcFilename);
-	strcat(buf, "\"\n");
-	strcat(buf, "st_dev = ");
-	strcat(buf, filest.st_dev);
-	strcat(buf, "\nst_mode = ");
-	strcat(buf, filest.st_mode);
-	strcat(buf, "\nst_uid = ");
-	strcat(buf, filest.st_uid);
-	strcat(buf, "\nst_gid = ");
-	strcat(buf, filest.st_gid);
-	strcat(buf, "\nst_mtime = ");
-	strcat(buf, filest.st_mtime);
-	strcat(buf, "\nmodified time = ");
-	strcat(buf, timestr);
+	sprintf(buf, "attibuts of file \"%s\"\n \tst_dev = %ld\n \tst_mode = %d\n \tst_uid = %d\n \tst_gid = %d\n \tst_mtime = %ld\n \tmodified time = %s", srcFilename, (long)filest.st_dev, filest.st_mode, filest.st_uid, filest.st_gid, (long)filest.st_mtime, timestr);
 
 	write(dest, buf, BUF);
 	printf("File attrubutes were successfully copied.\n");
@@ -74,7 +59,6 @@ int main(int argc, char *argv[])
 	chmod(destFilename, filest.st_mode);
 	chown(destFilename, filest.st_uid, filest.st_gid);
 
-	close(src);
 	close(dest);
 
 	return 0;
